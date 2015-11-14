@@ -10,7 +10,9 @@
 	</head>
 	<body>
 		Where the fudge should I run?
-
+		<div>
+			
+		</div>
 	</body>
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCz6Q6-pip3JkwbzQzIy0Cbq6brW_ybSk4&signed_in=true&callback=initMap"
         async defer>
@@ -30,7 +32,7 @@
 		        lat: position.coords.latitude,
 		        lng: position.coords.longitude
 		      };
-		      alert(pos);
+		      alert(pos[0] + ", " + pos[1]);
 		      // infoWindow.setPosition(pos);
 		      // infoWindow.setContent('Location found.');
 		      //map.setCenter(pos);

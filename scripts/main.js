@@ -5,6 +5,7 @@
 
 var map;
 var myLocation;
+var gPos;
 
 function init(){
     getMyLocation();
@@ -25,6 +26,7 @@ function getMyLocation(){
 
             initMap(pos);
             myLocation = pos;
+            gPos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
         }, function() {
             // handleLocationError(true, infoWindow, map.getCenter());
             alert("error");
@@ -135,25 +137,31 @@ function findCoordinates(pos)
     // Track the points we generate to return at the end
     var points = new Array();
 
+    var brng = 0;
     for(var i=0; i < numberOfPoints; i++)
     {
-        // X2 point will be cosine of angle * radius (range)
-        x2 = Math.cos(currentAngle) * range;
-        // Y2 point will be sin * range
-        y2 = Math.sin(currentAngle) * range;
-
-        // Assuming here you're using points for each x,y..
-        newLat = lat+x2;
-        newLng = lng+y2;
-        var lat_lng = new google.maps.LatLng(newLat,newLng);
-        var marker = new google.maps.Marker({
-            position: lat_lng,
+        new google.maps.Marker({
+            position: gPos.destinationPoint(brng, 1),
             map: map
         });
-
-
-        // Shift our angle around for the next point
-        currentAngle += degreesPerPoint;
+        brng += degreesPerPoint;
+        //// X2 point will be cosine of angle * radius (range)
+        //x2 = Math.cos(currentAngle) * range;
+        //// Y2 point will be sin * range
+        //y2 = Math.sin(currentAngle) * range;
+        //
+        //// Assuming here you're using points for each x,y..
+        //newLat = lat+x2;
+        //newLng = lng+y2;
+        //var lat_lng = new google.maps.LatLng(newLat,newLng);
+        //var marker = new google.maps.Marker({
+        //    position: lat_lng,
+        //    map: map
+        //});
+        //
+        //
+        //// Shift our angle around for the next point
+        //currentAngle += degreesPerPoint;
     }
     // Return the points we've generated
     //return points;

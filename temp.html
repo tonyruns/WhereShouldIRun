@@ -1,0 +1,131 @@
+
+JUST A BACKUP
+
+<script type="text/javascript">
+    //var myLocation;
+    var map;
+    $(function(){
+        //alert("ready");
+        //var geocoder = new google.maps.Geocoder;
+
+        getMyLocation();
+        //initMap(myLocation);
+        //alert("dog")
+    });
+
+    function getMyLocation(){
+        if (navigator.geolocation) {
+            return navigator.geolocation.getCurrentPosition(function(position) {
+                var pos = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                initMap(pos);
+                //myLocation = pos;
+            }, function() {
+                // handleLocationError(true, infoWindow, map.getCenter());
+                alert("error");
+            });
+        } else {
+            // Browser doesn't support Geolocation
+            // handleLocationError(false, infoWindow, map.getCenter());
+        }
+
+    }
+    function initMap(pos) {
+
+
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: pos,
+            zoom: 16
+        });
+
+        var startMarker = new google.maps.Marker({
+            position: pos,
+            map: map
+        });
+
+        generateCourse(5, pos);
+        //var infoWindow = new google.maps.InfoWindow({map: map});
+
+        // Try HTML5 geolocation.
+//			if (navigator.geolocation) {
+//				navigator.geolocation.getCurrentPosition(function(position) {
+//				  var pos = {
+//					lat: position.coords.latitude,
+//					lng: position.coords.longitude
+//				  };
+//					var map = new google.maps.Map(document.getElementById('map'), {
+//						center: pos,
+//						zoom: 6
+//					});
+//					//var infoWindow = new google.maps.InfoWindow({map: map});
+//
+//				}, function() {
+//				 // handleLocationError(true, infoWindow, map.getCenter());
+//				});
+//			  } else {
+//				// Browser doesn't support Geolocation
+//			   // handleLocationError(false, infoWindow, map.getCenter());
+//			}
+
+
+
+        var distance = 5; //this means i should i try to do increments of 1k
+        //alert(pos[0] + ", " + pos[1]);
+//			infoWindow.setPosition(pos);
+//			infoWindow.setContent('Location found.');
+        //map.setCenter(pos);
+
+//			google.maps.event.addListenerOnce(map, 'tilesloaded', function(){
+//				//this part runs when the mapobject is created and rendered
+//				google.maps.event.addListenerOnce(map, 'tilesloaded', generateCourse())
+//			});
+    }
+
+    function generateCourse(distance, myLocation){
+        var increments = distance/6.0;
+
+        //BECAUSE I DONT WANNA USE HAVERSINE
+        //latitude is the same regardless of longitude ---> this applies for north/south points
+        // 1 degree = 111.23 km or 110.574
+        // longitude -> 1 deg = 111.32cos(lat) km
+        var lat = myLocation["lat"];
+        var lng = myLocation["lng"];
+
+        var latConst = 110.574;
+        var lngConst = 111.32*Math.cos(lat);
+        var northCrd = {
+            lat: increments/latConst + lat,
+            lng: lng,
+        };
+
+        var southCrd = {
+            lat: lat - increments/latConst,
+            lng: lng,
+        };
+
+        var eastCrd = {
+            lat: lat,
+            lng: lng + increments/lngConst,
+        };
+        var westCrd = {
+            lat: lat,
+            lng: lng - increments/lngConst,
+        };
+
+        placeMarker(northCrd);
+        placeMarker(southCrd);
+        placeMarker(eastCrd);
+        placeMarker(westCrd);
+
+
+    }
+
+    function placeMarker(pos){
+        var temp = new google.maps.Marker({
+            position: pos,
+            map: map
+        });
+    }
+</script>

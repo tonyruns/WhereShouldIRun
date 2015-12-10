@@ -140,10 +140,12 @@ function findCoordinates(pos)
     var brng = 0;
     for(var i=0; i < numberOfPoints; i++)
     {
-        new google.maps.Marker({
-            position: gPos.destinationPoint(brng, 1),
-            map: map
-        });
+        var roadPos = gPos.destinationPoint(brng, 1);
+        roadPos.snapPointToRoad(map);
+        //new google.maps.Marker({
+        //    position: roadPos,
+        //    map: map
+        //});
         brng += degreesPerPoint;
         //// X2 point will be cosine of angle * radius (range)
         //x2 = Math.cos(currentAngle) * range;

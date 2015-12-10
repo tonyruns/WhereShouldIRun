@@ -34,3 +34,34 @@ google.maps.LatLng.prototype.destinationPoint = function(brng, dist) {
 
     return new google.maps.LatLng(lat2.toDeg(), lon2.toDeg());
 }
+
+var directionsService = new google.maps.DirectionsService();
+
+google.maps.LatLng.prototype.snapPointToRoad = function(map){
+    var latlng = this;
+    directionsService.route(
+        {origin:this, destination:this, travelMode: google.maps.DirectionsTravelMode.DRIVING},
+        function(response, status) {
+            var homeMarker;
+            if (status == google.maps.DirectionsStatus.OK)
+            {
+                homeMarker = new google.maps.Marker({
+                    position: response.routes[0].legs[0].start_location,
+                    map: map,
+                });
+                //return new google.maps.LatLng(response.routes[0].legs[0].start_location.lat, response.routes[0].legs[0].start_location.lng);
+            } else {
+                homeMarker = new google.maps.Marker({
+                    position: latlng,
+                    map: map,
+                });
+                //var infowindow = new google.maps.InfoWindow({
+                //    content: latlng.lat() + ", "+ latlng.lng()
+                //});
+                //infowindow.open(map, homeMarker);
+
+                //return this;
+            }
+    });
+    //return roadPoint;
+}

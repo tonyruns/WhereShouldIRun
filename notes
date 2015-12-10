@@ -1,0 +1,4 @@
+figure out how to get all the snapped points together
+1. Use distance matrix to get which ones are cloeset to the interval :)
+2. with the distance matrix, you can figure out which point to use,
+3. Distance matrix: https://developers.google.com/maps/documentation/distance-matrix/intro?hl=en

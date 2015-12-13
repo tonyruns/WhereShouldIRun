@@ -2,3 +2,40 @@ figure out how to get all the snapped points together
 1. Use distance matrix to get which ones are cloeset to the interval :)
 2. with the distance matrix, you can figure out which point to use,
 3. Distance matrix: https://developers.google.com/maps/documentation/distance-matrix/intro?hl=en
+
+
+
+
+https://oauth2-api.mapmyapi.com/v7.1/route/?close_to_location=30.2688%2C-97.7489&maximum_distance=5000&minimum_distance=1
+
+
+
+$.ajax({
+  type: "GET",
+  url: "URL to the GPX file",
+  dataType: "xml",
+  success: function(xml) {
+	var points = [];
+	var bounds = new google.maps.LatLngBounds ();
+	$(xml).find("trkpt").each(function() {
+	  var lat = $(this).attr("lat");
+	  var lon = $(this).attr("lon");
+	  var p = new google.maps.LatLng(lat, lon);
+	  points.push(p);
+	  bounds.extend(p);
+	});
+
+	var poly = new google.maps.Polyline({
+	  // use your own style here
+	  path: points,
+	  strokeColor: "#FF00AA",
+	  strokeOpacity: .7,
+	  strokeWeight: 4
+	});
+
+	poly.setMap(map);
+
+	// fit bounds to track
+	map.fitBounds(bounds);
+  }
+});

@@ -14,6 +14,36 @@ function init(){
     //
     //});
     $('#submit').on("click", {distance: 5}, generateCourse);
+
+    $.ajax({
+       url: "https://oauth2-api.mapmyapi.com/v7.1/route/?close_to_location=30.2688%2C-97.7489&maximum_distance=5000&minimum_distance=1",
+        beforeSend: function(xhr){
+            xhr.setRequestHeader('Api-Key', '5y9kjxu2jy5g4mf3h8pfaz3ky8uc7c49');
+            xhr.setRequestHeader('Authorization', 'Bearer 9b0254af91f48005a74a95041a08c82b9bd747b3');
+            xhr.setRequestHeader('X-Originating-Ip', '174.92.76.85');
+            xhr.setRequestHeader('Content-Type', 'application/json');
+        },
+        success: function(response){
+            console.log(response);
+            console.log(response._embedded.routes[0]._links.alternate[0])
+
+            $.ajax({
+                url: "https://oauth2-api.mapmyapi.com/v7.1/route/504251502/?format=kml&field_set=detailed" +
+                "&Api-Key=5y9kjxu2jy5g4mf3h8pfaz3ky8uc7c49" +
+                "&Authorization=Bearer_9b0254af91f48005a74a95041a08c82b9bd747b3",
+                //beforeSend: function(xhr){
+                //    xhr.setRequestHeader('Api-Key', '5y9kjxu2jy5g4mf3h8pfaz3ky8uc7c49');
+                //    xhr.setRequestHeader('Authorization', 'Bearer 9b0254af91f48005a74a95041a08c82b9bd747b3');
+                //    xhr.setRequestHeader('X-Originating-Ip', '174.92.76.85');
+                //    xhr.setRequestHeader('Content-Type', 'application/json');
+                //},
+                success:function(response){
+                    alert("yes");
+                    console.log(response);
+                }
+            })
+        }
+    });
 }
 
 function getMyLocation(){
@@ -39,12 +69,17 @@ function getMyLocation(){
 }
 
 function initMap(pos){
+    pos = {lat: 30.2688, lng: -97.7489}
     map = new google.maps.Map(document.getElementById('map'), {
         center: pos,
         zoom: 16
     });
     var startMarker = new google.maps.Marker({
         position: pos,
+        map: map
+    });
+    var ctaLayer = new google.maps.KmlLayer({
+        url: 'https://oauth2-api.mapmyapi.com/v7.1/route/504251502/?format=kml&field_set=detailed',
         map: map
     });
 }
@@ -135,18 +170,24 @@ function findCoordinates(pos)
     var x2;
     var y2;
     // Track the points we generate to return at the end
-    var points = new Array();
+    var points;
 
     var brng = 0;
-    for(var i=0; i < numberOfPoints; i++)
+    var target = gPos.destinationPoint(brng, 1);
+    points = target.lat + "," + target.lng;
+    for(var i=1; i < numberOfPoints; i++)
     {
-        var roadPos = gPos.destinationPoint(brng, 1);
-        roadPos.snapPointToRoad(map);
+        brng += degreesPerPoint;
+
+        target = gPos.destinationPoint(brng, 1);
+        points = target.lat + ", "
+
+
+        //roadPos.snapPointToRoad(map);
         //new google.maps.Marker({
         //    position: roadPos,
         //    map: map
         //});
-        brng += degreesPerPoint;
         //// X2 point will be cosine of angle * radius (range)
         //x2 = Math.cos(currentAngle) * range;
         //// Y2 point will be sin * range

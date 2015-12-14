@@ -6,6 +6,7 @@
 var map;
 var myLocation;
 var gPos;
+var currentPoly = new google.maps.Polyline();
 
 function init(){
     getMyLocation();
@@ -13,37 +14,8 @@ function init(){
     //    alert("yo");
     //
     //});
-    $('#submit').on("click", {distance: 5}, generateCourse);
-
-    $.ajax({
-       url: "https://oauth2-api.mapmyapi.com/v7.1/route/?close_to_location=30.2688%2C-97.7489&maximum_distance=5000&minimum_distance=1",
-        beforeSend: function(xhr){
-            xhr.setRequestHeader('Api-Key', '5y9kjxu2jy5g4mf3h8pfaz3ky8uc7c49');
-            xhr.setRequestHeader('Authorization', 'Bearer 9b0254af91f48005a74a95041a08c82b9bd747b3');
-            xhr.setRequestHeader('X-Originating-Ip', '174.92.76.85');
-            xhr.setRequestHeader('Content-Type', 'application/json');
-        },
-        success: function(response){
-            console.log(response);
-            console.log(response._embedded.routes[0]._links.alternate[0])
-
-            $.ajax({
-                url: "https://oauth2-api.mapmyapi.com/v7.1/route/504251502/?format=kml&field_set=detailed" +
-                "&Api-Key=5y9kjxu2jy5g4mf3h8pfaz3ky8uc7c49" +
-                "&Authorization=Bearer_9b0254af91f48005a74a95041a08c82b9bd747b3",
-                //beforeSend: function(xhr){
-                //    xhr.setRequestHeader('Api-Key', '5y9kjxu2jy5g4mf3h8pfaz3ky8uc7c49');
-                //    xhr.setRequestHeader('Authorization', 'Bearer 9b0254af91f48005a74a95041a08c82b9bd747b3');
-                //    xhr.setRequestHeader('X-Originating-Ip', '174.92.76.85');
-                //    xhr.setRequestHeader('Content-Type', 'application/json');
-                //},
-                success:function(response){
-                    alert("yes");
-                    console.log(response);
-                }
-            })
-        }
-    });
+    //$('#submit').on("click", {distance: 5}, generateCourse);
+    $('#submit').on("click", {distance: 5},findPublicRoutes);
 }
 
 function getMyLocation(){
@@ -69,7 +41,7 @@ function getMyLocation(){
 }
 
 function initMap(pos){
-    pos = {lat: 30.2688, lng: -97.7489}
+    //pos = {lat: 30.2688, lng: -97.7489}
     map = new google.maps.Map(document.getElementById('map'), {
         center: pos,
         zoom: 16
@@ -78,10 +50,25 @@ function initMap(pos){
         position: pos,
         map: map
     });
-    var ctaLayer = new google.maps.KmlLayer({
-        url: 'https://oauth2-api.mapmyapi.com/v7.1/route/504251502/?format=kml&field_set=detailed',
-        map: map
-    });
+
+    //$.ajax({
+    //    url: "https://oauth2-api.mapmyapi.com/v7.1/route/504251502/?format=kml&field_set=detailed" +
+    //    "&Api-Key=5y9kjxu2jy5g4mf3h8pfaz3ky8uc7c49" +
+    //    "&Authorization=Bearer_9b0254af91f48005a74a95041a08c82b9bd747b3" +
+    //    "&X-Originiating-Ip=174.92.76.85" +
+    //    "&Content-Type=application/json",
+    //    //beforeSend: function(xhr){
+    //    //    xhr.setRequestHeader('Api-Key', '5y9kjxu2jy5g4mf3h8pfaz3ky8uc7c49');
+    //    //    xhr.setRequestHeader('Authorization', 'Bearer 9b0254af91f48005a74a95041a08c82b9bd747b3');
+    //    //    xhr.setRequestHeader('X-Originating-Ip', '174.92.76.85');
+    //    //    xhr.setRequestHeader('Content-Type', 'application/json');
+    //    //},
+    //    success:function(response){
+    //        alert("yes");
+    //        console.log(response);
+    //    }
+    //})
+
 }
 
 function generateCourse(event){
@@ -208,6 +195,70 @@ function findCoordinates(pos)
     }
     // Return the points we've generated
     //return points;
+}
+
+function findPublicRoutes(event){
+
+    currentPoly.setMap(null);
+    var distance=event.data.distance*1000;
+    alert(distance);
+    $.ajax({
+        url: "https://oauth2-api.mapmyapi.com/v7.1/route/?close_to_location=" +
+            pos.lat + "%2C" + pos.lng +"&maximum_distance="+(distance)+"&minimum_distance="+(distance),
+        beforeSend: function(xhr){
+            xhr.setRequestHeader('Api-Key', '5y9kjxu2jy5g4mf3h8pfaz3ky8uc7c49');
+            xhr.setRequestHeader('Authorization', 'Bearer 9b0254af91f48005a74a95041a08c82b9bd747b3');
+            xhr.setRequestHeader('X-Originating-Ip', '174.92.76.85');
+            xhr.setRequestHeader('Content-Type', 'application/json');
+        },
+        success: function(response){
+            console.log(response);
+            var numRoutes = response._embedded.routes.length;
+            var selectedRoute = Math.floor(numRoutes*Math.random());
+            var gpxHref = response._embedded.routes[selectedRoute]._links.alternate[1].href;
+            $.ajax({
+                type: "GET",
+                url: "https://oauth2-api.mapmyapi.com"+gpxHref,
+                beforeSend: function(xhr){
+                        xhr.setRequestHeader('Api-Key', '5y9kjxu2jy5g4mf3h8pfaz3ky8uc7c49');
+                        xhr.setRequestHeader('Authorization', 'Bearer 9b0254af91f48005a74a95041a08c82b9bd747b3');
+                        xhr.setRequestHeader('X-Originating-Ip', '174.92.76.85');
+                        xhr.setRequestHeader('Content-Type', 'application/json');
+                },
+                dataType: "xml",
+                success: function(xml) {
+                    console.log(xml);
+                    var points = [];
+                    var bounds = new google.maps.LatLngBounds ();
+                    $(xml).find("trkpt").each(function() {
+                        var lat = $(this).attr("lat");
+                        var lon = $(this).attr("lon");
+                        var p = new google.maps.LatLng(lat, lon);
+                        points.push(p);
+                        bounds.extend(p);
+                    });
+
+                    var poly = new google.maps.Polyline({
+                        // use your own style here
+                        path: points,
+                        strokeColor: "#FF00AA",
+                        strokeOpacity: .7,
+                        strokeWeight: 4
+                    });
+
+                    currentPoly = poly;
+
+                    poly.setMap(map);
+
+                    // fit bounds to track
+                    map.fitBounds(bounds);
+                }
+            });
+
+
+        }
+    });
+
 }
 
 google.maps.event.addDomListener(window, 'load', init);

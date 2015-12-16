@@ -15,7 +15,8 @@ function init(){
     //
     //});
     //$('#submit').on("click", {distance: 5}, generateCourse);
-    $('#submit').on("click", {distance: 5},findPublicRoutes);
+    debugger
+    $('#submit').on("click",findPublicRoutes);
 }
 
 function getMyLocation(){
@@ -50,25 +51,6 @@ function initMap(pos){
         position: pos,
         map: map
     });
-
-    //$.ajax({
-    //    url: "https://oauth2-api.mapmyapi.com/v7.1/route/504251502/?format=kml&field_set=detailed" +
-    //    "&Api-Key=5y9kjxu2jy5g4mf3h8pfaz3ky8uc7c49" +
-    //    "&Authorization=Bearer_9b0254af91f48005a74a95041a08c82b9bd747b3" +
-    //    "&X-Originiating-Ip=174.92.76.85" +
-    //    "&Content-Type=application/json",
-    //    //beforeSend: function(xhr){
-    //    //    xhr.setRequestHeader('Api-Key', '5y9kjxu2jy5g4mf3h8pfaz3ky8uc7c49');
-    //    //    xhr.setRequestHeader('Authorization', 'Bearer 9b0254af91f48005a74a95041a08c82b9bd747b3');
-    //    //    xhr.setRequestHeader('X-Originating-Ip', '174.92.76.85');
-    //    //    xhr.setRequestHeader('Content-Type', 'application/json');
-    //    //},
-    //    success:function(response){
-    //        alert("yes");
-    //        console.log(response);
-    //    }
-    //})
-
 }
 
 function generateCourse(event){
@@ -197,14 +179,13 @@ function findCoordinates(pos)
     //return points;
 }
 
-function findPublicRoutes(event){
+function findPublicRoutes(){
 
-    currentPoly.setMap(null);
-    var distance=event.data.distance*1000;
+    var distance=$( "#distance" ).val()*1000;
     alert(distance);
     $.ajax({
         url: "https://oauth2-api.mapmyapi.com/v7.1/route/?close_to_location=" +
-            pos.lat + "%2C" + pos.lng +"&maximum_distance="+(distance)+"&minimum_distance="+(distance),
+            pos.lat + "%2C" + pos.lng +"&maximum_distance="+(distance*1.05)+"&minimum_distance="+(distance*0.95),
         beforeSend: function(xhr){
             xhr.setRequestHeader('Api-Key', '5y9kjxu2jy5g4mf3h8pfaz3ky8uc7c49');
             xhr.setRequestHeader('Authorization', 'Bearer 9b0254af91f48005a74a95041a08c82b9bd747b3');
@@ -212,6 +193,7 @@ function findPublicRoutes(event){
             xhr.setRequestHeader('Content-Type', 'application/json');
         },
         success: function(response){
+
             console.log(response);
             var numRoutes = response._embedded.routes.length;
             var selectedRoute = Math.floor(numRoutes*Math.random());
@@ -245,6 +227,7 @@ function findPublicRoutes(event){
                         strokeOpacity: .7,
                         strokeWeight: 4
                     });
+                    currentPoly.setMap(null);
 
                     currentPoly = poly;
 

@@ -10,13 +10,9 @@ var currentPoly = new google.maps.Polyline();
 
 function init(){
     getMyLocation();
-    //$('#submit').click(function(){
-    //    alert("yo");
-    //
-    //});
-    //$('#submit').on("click", {distance: 5}, generateCourse);
-    debugger
+
     $('#submit').on("click",findPublicRoutes);
+
 }
 
 function getMyLocation(){
@@ -198,6 +194,8 @@ function findPublicRoutes(){
             var numRoutes = response._embedded.routes.length;
             var selectedRoute = Math.floor(numRoutes*Math.random());
             var gpxHref = response._embedded.routes[selectedRoute]._links.alternate[1].href;
+            var distance = (response._embedded.routes[selectedRoute].distance/1000).toFixed(2);
+            $('#result').html(distance);
             $.ajax({
                 type: "GET",
                 url: "https://oauth2-api.mapmyapi.com"+gpxHref,
@@ -208,34 +206,7 @@ function findPublicRoutes(){
                         xhr.setRequestHeader('Content-Type', 'application/json');
                 },
                 dataType: "xml",
-                success: function(xml) {
-                    console.log(xml);
-                    var points = [];
-                    var bounds = new google.maps.LatLngBounds ();
-                    $(xml).find("trkpt").each(function() {
-                        var lat = $(this).attr("lat");
-                        var lon = $(this).attr("lon");
-                        var p = new google.maps.LatLng(lat, lon);
-                        points.push(p);
-                        bounds.extend(p);
-                    });
-
-                    var poly = new google.maps.Polyline({
-                        // use your own style here
-                        path: points,
-                        strokeColor: "#FF00AA",
-                        strokeOpacity: .7,
-                        strokeWeight: 4
-                    });
-                    currentPoly.setMap(null);
-
-                    currentPoly = poly;
-
-                    poly.setMap(map);
-
-                    // fit bounds to track
-                    map.fitBounds(bounds);
-                }
+                success: mapPolyLine
             });
 
 
@@ -244,4 +215,24 @@ function findPublicRoutes(){
 
 }
 
+function updateDistances(){
+    //0 represents km, 1 represents miles
+    debugger;
+    var limit = $('#unit').val() == 1? 26 : 42;
+    $('#distance option').remove();
+
+    for(var i=0; i<limit; i++){
+        $('#distance').append($('<option>',{
+            value: i+1,
+            text: i+1
+        }));
+    }
+
+}
+
 google.maps.event.addDomListener(window, 'load', init);
+
+$(function(){
+    $('#unit').change(updateDistances);
+    updateDistances();
+})

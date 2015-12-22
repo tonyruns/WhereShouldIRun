@@ -217,16 +217,19 @@ function findPublicRoutes(){
 
 function updateDistances(){
     //0 represents km, 1 represents miles
-    debugger;
     var limit = $('#unit').val() == 1? 26 : 42;
     $('#distance option').remove();
+    $('#distance').selectpicker('refresh');
 
     for(var i=0; i<limit; i++){
         $('#distance').append($('<option>',{
             value: i+1,
             text: i+1
         }));
+        $('#distance').selectpicker('refresh');
+
     }
+    //$('#distance').selectpicker('render');
 
 }
 

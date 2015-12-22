@@ -20,47 +20,33 @@
 
 	</head>
 	<body>
-		Where the fudge should I run? bruh1
 		<div class ="container">
 			<div class="row">
 				<div id = "map" class="map-canvas" >
 
 				</div>
 			</div>
+			<br />
 			<div class="row">
-				<div class="col-md-2">
-					<div class="dropdown">
-						<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-							Dropdown
-							<span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-							<li><a href="#">Action</a></li>
-							<li><a href="#">Another action</a></li>
-							<li><a href="#">Something else here</a></li>
-							<li role="separator" class="divider"></li>
-							<li><a href="#">Separated link</a></li>
-						</ul>
+				<div class="col-md-1"></div>
+				<div class="col-md-4">
+					<b>Distance</b>
+					<div class="row">
+						<!-- Split button distance -->
+						<select id ="distance" class="selectpicker col-sm-5 noRightPad">
+						</select>
+						<select id="unit" class="selectpicker col-sm-3 noLeftPad">
+							<option value="0">KM</option>
+							<option value="1">MI</option>
+						</select>
 					</div>
+
+
 				</div>
 				<div class="col-md-2">
-					Distance
-					<!-- Split button distance -->
-					<select id ="distance" class="form-control">
-					</select>
-					<select id="unit" class="selectpicker">
-						<option value="0">KM</option>
-						<option value="1">MI</option>
-					</select>
-
-				</div>
-				<div class ="col-md-1">
-
-				</div>
-				<div class="col-md-3">
 						<button type="button" id="submit" class="btn btn-default">Submit</button>
 				</div>
-				<div class="col-md-3">
+				<div class="col-md-5">
 					Acutal Distance
 					<div id="result"></div>
 				</div>

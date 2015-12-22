@@ -78,6 +78,11 @@ function mapPolyLine (xml) {
         bounds.extend(p);
     });
 
+    //to do:
+    //set markers for start and end
+
+    bounds.extend(gPos);
+
     var poly = new google.maps.Polyline({
         // use your own style here
         path: points,

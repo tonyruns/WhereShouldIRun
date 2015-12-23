@@ -78,6 +78,13 @@ function mapPolyLine (xml) {
         bounds.extend(p);
     });
 
+    //setMarker(points[0], FlagType.START);
+    while(_activeMarkers.length > 0){
+        var tempMarker = _activeMarkers.pop();
+        tempMarker.setMap(null);
+    }
+    _activeMarkers.push(getMarker(points[points.length-1], FlagType.END));
+
     //to do:
     //set markers for start and end
 
@@ -98,4 +105,26 @@ function mapPolyLine (xml) {
 
     // fit bounds to track
     map.fitBounds(bounds);
+}
+
+function getMarker(pos, type){
+    var image;
+
+    if(type == FlagType.END){
+        image = {
+            url: 'images/finishFlag.png',
+            size: new google.maps.Size(20, 32),
+            origin: new google.maps.Point(0, 0),
+            anchor: new google.maps.Point(10, 32)
+        };
+    }
+
+    var marker = new google.maps.Marker({
+        icon: image,
+        position: pos,
+        map: map
+    });
+
+    return marker;
+
 }

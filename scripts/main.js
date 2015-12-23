@@ -7,8 +7,18 @@ var map;
 var myLocation;
 var gPos;
 var currentPoly = new google.maps.Polyline();
+var _activeMarkers = [];
+
+var KM_PER_MILE = 1.60934;
+
+var FlagType ={
+    REGULAR:0,
+    START:1,
+    END:2
+};
 
 function init(){
+    //$('#overlay').show();
     getMyLocation();
 
     $('#submit').on("click",findPublicRoutes);
@@ -26,6 +36,7 @@ function getMyLocation(){
             initMap(pos);
             myLocation = pos;
             gPos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            //$('#overlay').hide();
         }, function() {
             // handleLocationError(true, infoWindow, map.getCenter());
             alert("error");
@@ -177,8 +188,10 @@ function findCoordinates(pos)
 
 function findPublicRoutes(){
 
-    var distance=$( "#distance" ).val()*1000;
+    //convert distances to metres
+    var distance=$( "#distance" ).val()*1000 * ($('#unit').val() == 1 ? KM_PER_MILE : 1);
     alert(distance);
+
     $.ajax({
         url: "https://oauth2-api.mapmyapi.com/v7.1/route/?close_to_location=" +
             pos.lat + "%2C" + pos.lng +"&maximum_distance="+(distance*1.05)+"&minimum_distance="+(distance*0.95),
@@ -194,8 +207,13 @@ function findPublicRoutes(){
             var numRoutes = response._embedded.routes.length;
             var selectedRoute = Math.floor(numRoutes*Math.random());
             var gpxHref = response._embedded.routes[selectedRoute]._links.alternate[1].href;
-            var distance = (response._embedded.routes[selectedRoute].distance/1000).toFixed(2);
-            $('#result').html(distance);
+            var distance = response._embedded.routes[selectedRoute].distance/1000;
+
+            if ($('#unit').val() == 0) {
+                $('#result').html(distance.toFixed(2) + " KM");
+            }else{
+                $('#result').html((distance/KM_PER_MILE).toFixed(2) + " MI");
+            }
             $.ajax({
                 type: "GET",
                 url: "https://oauth2-api.mapmyapi.com"+gpxHref,
@@ -218,6 +236,8 @@ function findPublicRoutes(){
 function updateDistances(){
     //0 represents km, 1 represents miles
     var limit = $('#unit').val() == 1? 26 : 42;
+
+
     $('#distance option').remove();
     $('#distance').selectpicker('refresh');
 
@@ -229,7 +249,6 @@ function updateDistances(){
         $('#distance').selectpicker('refresh');
 
     }
-    //$('#distance').selectpicker('render');
 
 }
 

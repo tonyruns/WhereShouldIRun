@@ -18,7 +18,8 @@ var FlagType ={
 };
 
 function init(){
-    $('#overlay').show();
+    showOverlay();
+
     getMyLocation();
 
     $('#submit').on("click",findPublicRoutes);
@@ -36,7 +37,8 @@ function getMyLocation(){
             initMap(pos);
             myLocation = pos;
             gPos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-            $('#overlay').hide();
+
+            hideOverlay();
         }, function() {
             // handleLocationError(true, infoWindow, map.getCenter());
             alert("error");
@@ -192,6 +194,8 @@ function findPublicRoutes(){
     var distance=$( "#distance" ).val()*1000 * ($('#unit').val() == 1 ? KM_PER_MILE : 1);
     //alert(distance);
 
+    showOverlay();
+
     $.ajax({
         url: "https://oauth2-api.mapmyapi.com/v7.1/route/?close_to_location=" +
             pos.lat + "%2C" + pos.lng +"&maximum_distance="+(distance*1.05)+"&minimum_distance="+(distance*0.95),
@@ -232,6 +236,7 @@ function findPublicRoutes(){
 
                     $('#loadMusic').trigger('pause');
                     $('#loadMusic').prop("currentTime",0);
+                    hideOverlay();
 
                 }
             });
@@ -258,7 +263,14 @@ function updateDistances(){
         $('#distance').selectpicker('refresh');
 
     }
+}
 
+function showOverlay(){
+    $('#overlay').show();
+}
+
+function hideOverlay(){
+    $('#overlay').hide();
 }
 
 google.maps.event.addDomListener(window, 'load', init);

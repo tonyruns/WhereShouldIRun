@@ -115,7 +115,7 @@ function getMarker(pos, type){
             url: 'images/finishFlag.png',
             size: new google.maps.Size(20, 32),
             origin: new google.maps.Point(0, 0),
-            anchor: new google.maps.Point(10, 32)
+            anchor: new google.maps.Point(20, 32)
         };
     }
 

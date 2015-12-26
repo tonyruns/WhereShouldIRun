@@ -18,7 +18,7 @@ var FlagType ={
 };
 
 function init(){
-    //$('#overlay').show();
+    $('#overlay').show();
     getMyLocation();
 
     $('#submit').on("click",findPublicRoutes);
@@ -36,7 +36,7 @@ function getMyLocation(){
             initMap(pos);
             myLocation = pos;
             gPos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-            //$('#overlay').hide();
+            $('#overlay').hide();
         }, function() {
             // handleLocationError(true, infoWindow, map.getCenter());
             alert("error");
@@ -190,7 +190,7 @@ function findPublicRoutes(){
 
     //convert distances to metres
     var distance=$( "#distance" ).val()*1000 * ($('#unit').val() == 1 ? KM_PER_MILE : 1);
-    alert(distance);
+    //alert(distance);
 
     $.ajax({
         url: "https://oauth2-api.mapmyapi.com/v7.1/route/?close_to_location=" +
@@ -200,6 +200,7 @@ function findPublicRoutes(){
             xhr.setRequestHeader('Authorization', 'Bearer 9b0254af91f48005a74a95041a08c82b9bd747b3');
             xhr.setRequestHeader('X-Originating-Ip', '174.92.76.85');
             xhr.setRequestHeader('Content-Type', 'application/json');
+            $('#loadMusic').trigger('play');
         },
         success: function(response){
 
@@ -209,11 +210,7 @@ function findPublicRoutes(){
             var gpxHref = response._embedded.routes[selectedRoute]._links.alternate[1].href;
             var distance = response._embedded.routes[selectedRoute].distance/1000;
 
-            if ($('#unit').val() == 0) {
-                $('#result').html(distance.toFixed(2) + " KM");
-            }else{
-                $('#result').html((distance/KM_PER_MILE).toFixed(2) + " MI");
-            }
+
             $.ajax({
                 type: "GET",
                 url: "https://oauth2-api.mapmyapi.com"+gpxHref,
@@ -224,7 +221,19 @@ function findPublicRoutes(){
                         xhr.setRequestHeader('Content-Type', 'application/json');
                 },
                 dataType: "xml",
-                success: mapPolyLine
+                success: function(result){
+
+                    if ($('#unit').val() == 0) {
+                        $('#result').html(distance.toFixed(2) + " KM");
+                    }else{
+                        $('#result').html((distance/KM_PER_MILE).toFixed(2) + " MI");
+                    }
+                    mapPolyLine(result);
+
+                    $('#loadMusic').trigger('pause');
+                    $('#loadMusic').prop("currentTime",0);
+
+                }
             });
 
 

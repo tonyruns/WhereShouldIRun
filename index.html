@@ -5,6 +5,7 @@
 	<head>
 		<link href = "css/bootstrap.css" rel="stylesheet" type = "text/css">
 		<link href = "css/site.css" rel = "stylesheet" type = "text/css">
+		<link href = "css/bootstrap-switch.css" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.8.1/css/bootstrap-select.min.css">
 
 
@@ -15,8 +16,9 @@
 		<script src="scripts/bootstrap.js" type="text/javascript"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.8.1/js/bootstrap-select.min.js"></script>
 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCz6Q6-pip3JkwbzQzIy0Cbq6brW_ybSk4"r></script>
+		<script type="text/javascript" src="scripts/bootstrap-switch.js"></script>
 		<script type="text/javascript" src="scripts/main.js" ></script>
-		<script src="scripts/maps.js" type="text/javascript" ></script>
+		<script type="text/javascript" src="scripts/maps.js"></script>
 
 	</head>
 	<body>
@@ -35,10 +37,10 @@
 						<!-- Split button distance -->
 						<select id ="distance" class="selectpicker col-sm-5 noRightPad">
 						</select>
-						<select id="unit" class="selectpicker col-sm-3 noLeftPad">
-							<option value="0">KM</option>
-							<option value="1">MI</option>
-						</select>
+						<!--<select id="unit" class="selectpicker col-sm-3 noLeftPad">-->
+							<!--<option value="0">KM</option>-->
+							<!--<option value="1">MI</option>-->
+						<!--</select>-->
 					</div>
 
 
@@ -51,13 +53,18 @@
 					<div id="result"></div>
 				</div>
 			</div>
-			<p id="crd"></p>
+			<div class = "container footer">
+				<div class="row">
+				<input type="checkbox" id="unit" checked>
+				</div>
+			</div>
+			</div>
 		</div>
-		<div id="overlay">
-			Hold up...
+		<div class="overlay" id="overlayMain">
+			Hold up
+			<div class="loader"></div>
 		</div>
 		<audio src="music/HoldUp.mp3" id="loadMusic">
-			<p>If you are reading this, it is because your browser does not support the audio element.     </p>
 		</audio>
 
 	</body>

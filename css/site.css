@@ -11,7 +11,7 @@
     padding-left: 0px;
 }
 
-#overlay {
+.overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -25,12 +25,29 @@
     z-index: 10000;
     text-align: center;
     color: black;
+    vertical-align: middle;
+
+}
+.loader {
+    display: block;
+    width: 220px;
+    background: url(../images/loading.GIF) no-repeat;
+    margin: 2rem auto;
+    height: 3.5rem;
+    position: relative;
 }
 
-body{
-    font-family:"bebas", Tahoma, Geneva, sans-serif;
-    color:black;
-    line-height:1;
-    text-transform: uppercase;
-    font-weight: bold;
+@media only screen and (min-width: 30em) {
+    .overlay {
+        font-size: 4rem;
+        padding-top: 26rem;
+    }
+
+    body {
+        font-family: "Bebas Neue", bebas, Tahoma, Geneva, sans-serif;
+        color: black;
+        line-height: 1;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
 }

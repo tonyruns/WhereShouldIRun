@@ -18,6 +18,16 @@ var FlagType ={
 };
 
 function init(){
+
+    $("#unit").attr({
+        "data-on-text": "KM",
+        "data-off-text": "MI",
+        "data-on-color": "default",
+    });
+
+    $("#unit").bootstrapSwitch();
+
+
     showOverlay();
 
     getMyLocation();
@@ -191,7 +201,7 @@ function findCoordinates(pos)
 function findPublicRoutes(){
 
     //convert distances to metres
-    var distance=$( "#distance" ).val()*1000 * ($('#unit').val() == 1 ? KM_PER_MILE : 1);
+    var distance=$( "#distance" ).val()*1000 * (!$('#unit').prop("checked") ? KM_PER_MILE : 1);
     //alert(distance);
 
     showOverlay();
@@ -227,7 +237,7 @@ function findPublicRoutes(){
                 dataType: "xml",
                 success: function(result){
 
-                    if ($('#unit').val() == 0) {
+                    if ($('#unit').prop("checked")) {
                         $('#result').html(distance.toFixed(2) + " KM");
                     }else{
                         $('#result').html((distance/KM_PER_MILE).toFixed(2) + " MI");
@@ -249,9 +259,8 @@ function findPublicRoutes(){
 
 function updateDistances(){
     //0 represents km, 1 represents miles
-    var limit = $('#unit').val() == 1? 26 : 42;
-
-
+    var limit = !$('#unit').prop("checked") ? 26 : 42;
+    
     $('#distance option').remove();
     $('#distance').selectpicker('refresh');
 
@@ -266,16 +275,19 @@ function updateDistances(){
 }
 
 function showOverlay(){
-    $('#overlay').show();
+    $('#overlayMain').show();
 }
 
 function hideOverlay(){
-    $('#overlay').hide();
+    $('#overlayMain').hide();
 }
 
 google.maps.event.addDomListener(window, 'load', init);
 
 $(function(){
-    $('#unit').change(updateDistances);
+    $('#unit').on('switchChange.bootstrapSwitch', function(event, state){
+        updateDistances();
+    });
+
     updateDistances();
 })

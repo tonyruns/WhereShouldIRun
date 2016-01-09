@@ -117,6 +117,13 @@ function getMarker(pos, type){
             origin: new google.maps.Point(0, 0),
             anchor: new google.maps.Point(20, 32)
         };
+    }else if (type == FlagType.START){
+        image = {
+            url: 'images/startFlag.png',
+            size: new google.maps.Size(20,32),
+            origin: new google.maps.Point(0,0),
+            anchor: new google.maps.Point(20,32),
+        }
     }
 
     var marker = new google.maps.Marker({

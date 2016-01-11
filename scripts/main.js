@@ -211,7 +211,7 @@ function findPublicRoutes(){
             pos.lat + "%2C" + pos.lng +"&maximum_distance="+(distance*1.05)+"&minimum_distance="+(distance*0.95),
         beforeSend: function(xhr){
             xhr.setRequestHeader('Api-Key', '5y9kjxu2jy5g4mf3h8pfaz3ky8uc7c49');
-            xhr.setRequestHeader('Authorization', 'Bearer 9b0254af91f48005a74a95041a08c82b9bd747b3');
+            xhr.setRequestHeader('Authorization', 'Bearer 6013db221b8235c9dc7b2f78f1ecf0d653204da5');
             xhr.setRequestHeader('X-Originating-Ip', '174.92.76.85');
             xhr.setRequestHeader('Content-Type', 'application/json');
             $('#loadMusic').trigger('play');
@@ -230,7 +230,7 @@ function findPublicRoutes(){
                 url: "https://oauth2-api.mapmyapi.com"+gpxHref,
                 beforeSend: function(xhr){
                         xhr.setRequestHeader('Api-Key', '5y9kjxu2jy5g4mf3h8pfaz3ky8uc7c49');
-                        xhr.setRequestHeader('Authorization', 'Bearer 9b0254af91f48005a74a95041a08c82b9bd747b3');
+                        xhr.setRequestHeader('Authorization', 'Bearer 6013db221b8235c9dc7b2f78f1ecf0d653204da5');
                         xhr.setRequestHeader('X-Originating-Ip', '174.92.76.85');
                         xhr.setRequestHeader('Content-Type', 'application/json');
                 },
@@ -288,6 +288,10 @@ $(function(){
     $('#unit').on('switchChange.bootstrapSwitch', function(event, state){
         updateDistances();
     });
+
+    //$.ajax({
+    //
+    //});
 
     updateDistances();
 })

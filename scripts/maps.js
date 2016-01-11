@@ -83,6 +83,8 @@ function mapPolyLine (xml) {
         var tempMarker = _activeMarkers.pop();
         tempMarker.setMap(null);
     }
+
+
     _activeMarkers.push(getMarker(points[points.length-1], FlagType.END));
 
     //to do:

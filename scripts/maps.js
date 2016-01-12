@@ -84,8 +84,13 @@ function mapPolyLine (xml) {
         tempMarker.setMap(null);
     }
 
-
-    _activeMarkers.push(getMarker(points[points.length-1], FlagType.END));
+    if (getDistanceFromLatLonInKm(myLocation, points[0]) < getDistanceFromLatLonInKm(myLocation, points[points.length-1])){
+        _activeMarkers.push(getMarker(points[0], FlagType.START));
+        _activeMarkers.push(getMarker(points[points.length-1], FlagType.END));
+    }else{
+        _activeMarkers.push(getMarker(points[0], FlagType.END));
+        _activeMarkers.push(getMarker(points[points.length-1], FlagType.START));
+    }
 
     //to do:
     //set markers for start and end
@@ -122,9 +127,9 @@ function getMarker(pos, type){
     }else if (type == FlagType.START){
         image = {
             url: 'images/startFlag.png',
-            size: new google.maps.Size(20,32),
+            size: new google.maps.Size(32,32),
             origin: new google.maps.Point(0,0),
-            anchor: new google.maps.Point(20,32),
+            //anchor: new google.maps.Point(16, 30),
         }
     }
 
@@ -136,4 +141,27 @@ function getMarker(pos, type){
 
     return marker;
 
+}
+
+function getDistanceFromLatLonInKm(crd1,crd2) {
+    var lat1 = crd1.lat;
+    var lat2 = crd2.lat;
+    var lon1 = crd1.lon == undefined ? crd1.lng : crd1.lon;
+    var lon2 = crd2.lon == undefined ? crd2.lng : crd2.lon;
+
+    var R = 6371; // Radius of the earth in km
+    var dLat = deg2rad(lat2 - lat1);  // deg2rad below
+    var dLon = deg2rad(lon2 - lon1);
+    var a =
+            Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+            Math.sin(dLon/2) * Math.sin(dLon/2)
+        ;
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    var d = R * c; // Distance in km
+    return d;
+}
+
+function deg2rad(deg) {
+    return deg * (Math.PI/180)
 }

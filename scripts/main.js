@@ -4,7 +4,7 @@
 
 
 var map;
-var myLocation;
+var myLocation; //json object
 var gPos;
 var currentPoly = new google.maps.Polyline();
 var _activeMarkers = [];
@@ -92,25 +92,25 @@ function generateCourse(event){
     //latitude is the same regardless of longitude ---> this applies for north/south points
     // 1 degree = 111.23 km or 110.574
     // longitude -> 1 deg = 111.32cos(lat) km
-    var lat = myLocation["lat"];
-    var lng = myLocation["lng"];
-
-    var latConst = 110.574;
-    var lngConst = 111.32*Math.cos(lat);
-    var northCrd = {
-        lat: increments/latConst + lat,
-        lng: lng,
-    };
-
-    var southCrd = {
-        lat: lat - increments/latConst,
-        lng: lng,
-    };
-
-    $('#crd').html(northCrd["lat"]+", "+northCrd["lng"]);
-
-    var waypts = [];
-    waypts.push({location: northCrd, stopover: true});
+    //var lat = myLocation["lat"];
+    //var lng = myLocation["lng"];
+    //
+    //var latConst = 110.574;
+    //var lngConst = 111.32*Math.cos(lat);
+    //var northCrd = {
+    //    lat: increments/latConst + lat,
+    //    lng: lng,
+    //};
+    //
+    //var southCrd = {
+    //    lat: lat - increments/latConst,
+    //    lng: lng,
+    //};
+    //
+    //$('#crd').html(northCrd["lat"]+", "+northCrd["lng"]);
+    //
+    //var waypts = [];
+    //waypts.push({location: northCrd, stopover: true});
 
 
     //directionsService.route({

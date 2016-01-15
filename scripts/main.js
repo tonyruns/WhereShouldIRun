@@ -58,7 +58,7 @@ function getMyLocation(){
             myLocation = pos;
             gPos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
             hideOverlay();
-            //$('#searchScreen').show();
+            $('#searchScreen').hide();
             //$('.main').hide();
             //initSearch();
 
@@ -66,7 +66,6 @@ function getMyLocation(){
             //hideOverlay();
         }, function() {
             // handleLocationError(true, infoWindow, map.getCenter());
-
             pos = { //default location to TDOT
                 lat: 43.652073,
                 lng: -79.382293,

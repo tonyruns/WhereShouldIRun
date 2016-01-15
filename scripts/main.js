@@ -37,8 +37,16 @@ function init(){
 }
 
 function getMyLocation(){
+    //$.ajax({
+    //    url: "http://jservice.io/api/random",
+    //    dataType: "json",
+    //    success: function(response){
+    //        debugger;
+    //    }
+    //});
     if (navigator.geolocation) {
         return navigator.geolocation.getCurrentPosition(function(position) {
+
             pos = {
                 lat: position.coords.latitude,
                 lng: position.coords.longitude
@@ -47,10 +55,18 @@ function getMyLocation(){
             initMap(pos);
             myLocation = pos;
             gPos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-
             hideOverlay();
+            $('#searchScreen').show();
+            $('.main').hide();
+            initSearch();
+
+            //
+            //hideOverlay();
         }, function() {
             // handleLocationError(true, infoWindow, map.getCenter());
+            hideOverlay();
+            $('#searchScreen').show();
+            initSearch();
             alert("error");
         });
     } else {
@@ -206,6 +222,8 @@ function findPublicRoutes(){
 
     showOverlay();
 
+
+
     $.ajax({
         url: "https://oauth2-api.mapmyapi.com/v7.1/route/?close_to_location=" +
             pos.lat + "%2C" + pos.lng +"&maximum_distance="+(distance*1.05)+"&minimum_distance="+(distance*0.95),
@@ -276,6 +294,7 @@ function updateDistances(){
 
 function showOverlay(){
     $('#overlayMain').show();
+    $('#searchScreen').hide();
 }
 
 function hideOverlay(){
@@ -295,3 +314,9 @@ $(function(){
 
     updateDistances();
 })
+
+
+function initSearch(){
+    initAutocomplete();
+
+}

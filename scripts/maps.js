@@ -85,11 +85,11 @@ function mapPolyLine (xml) {
     }
 
     if (getDistanceFromLatLonInKm(myLocation, points[0]) < getDistanceFromLatLonInKm(myLocation, points[points.length-1])){
-        _activeMarkers.push(getMarker(points[0], FlagType.START));
-        _activeMarkers.push(getMarker(points[points.length-1], FlagType.END));
-    }else{
         _activeMarkers.push(getMarker(points[0], FlagType.END));
         _activeMarkers.push(getMarker(points[points.length-1], FlagType.START));
+    }else{
+        _activeMarkers.push(getMarker(points[0], FlagType.START));
+        _activeMarkers.push(getMarker(points[points.length-1], FlagType.END));
     }
 
     //to do:
@@ -171,44 +171,61 @@ function initAutocomplete() {
     var input = /** @type {!HTMLInputElement} */(
         document.getElementById('pac-input'));
 
-    //var types = document.getElementById('type-selector');
-    //map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-    //map.controls[google.maps.ControlPosition.TOP_LEFT].push(types);
-
-    var autocomplete = new google.maps.places.Autocomplete(input);
+    autocomplete = new google.maps.places.Autocomplete(input);
     autocomplete.bindTo('bounds', map);
 
     var infowindow = new google.maps.InfoWindow();
-    var marker = new google.maps.Marker({
-        map: map,
-        anchorPoint: new google.maps.Point(0, -29)
-    });
+    //var marker = new google.maps.Marker({
+    //    map: map,
+    //    //anchorPoint: new google.maps.Point(0, -29)
+    //});
 
-    autocomplete.addListener('place_changed', function() {
+   // autocomplete.addListener('place_changed', function() {
+    $('#searchButton').on('click', function(){
         infowindow.close();
-        marker.setVisible(false);
+       // marker.setVisible(false);
         var place = autocomplete.getPlace();
-        if (!place.geometry) {
-            window.alert("Autocomplete's returned place contains no geometry");
+        if (!place || !place.geometry) {
+            $('#noResults').show();
             return;
         }
+        $('#noResults').hide();
 
+        $('.main').show();
+        $('.selectpicker').selectpicker('show');
+        $('#searchScreen').hide();
         // If the place has a geometry, then present it on a map.
         if (place.geometry.viewport) {
             map.fitBounds(place.geometry.viewport);
+
         } else {
             map.setCenter(place.geometry.location);
-            map.setZoom(17);  // Why 17? Because it looks good.
+            map.setZoom(16);  // Why 17? Because it looks good.
         }
-        marker.setIcon(/** @type {google.maps.Icon} */({
-            url: place.icon,
-            size: new google.maps.Size(71, 71),
-            origin: new google.maps.Point(0, 0),
-            anchor: new google.maps.Point(17, 34),
-            scaledSize: new google.maps.Size(35, 35)
-        }));
-        marker.setPosition(place.geometry.location);
-        marker.setVisible(true);
+
+
+        startMarker.setMap(null);
+        startMarker = new google.maps.Marker({
+            map: map,
+            position: place.geometry.location
+        });
+
+        gPos = place.geometry.location;
+        myLocation = {
+            lat: place.geometry.location.lat(),
+            lng: place.geometry.location.lng()
+        }
+
+
+        //marker.setIcon(/** @type {google.maps.Icon} */({
+        //    url: place.icon,
+        //    size: new google.maps.Size(71, 71),
+        //    origin: new google.maps.Point(0, 0),
+        //    anchor: new google.maps.Point(17, 34),
+        //    scaledSize: new google.maps.Size(35, 35)
+        //}));
+        //marker.setPosition(place.geometry.location);
+        //marker.setVisible(true);
 
         var address = '';
         if (place.address_components) {
@@ -219,9 +236,9 @@ function initAutocomplete() {
             ].join(' ');
         }
 
-        infowindow.setContent('<div id="hook"><strong>' + place.name + '</strong><br>' + address);
+        //infowindow.setContent('<div id="hook"><strong>' + place.name + '</strong><br>' + address);
 
-        infowindow.open(map, marker);
-        infowindow.zIndex(10000);
+        //infowindow.open(map, marker);
+        //infowindow.zIndex(10000);
     });
 }

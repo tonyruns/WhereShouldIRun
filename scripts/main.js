@@ -8,6 +8,8 @@ var myLocation; //json object
 var gPos;
 var currentPoly = new google.maps.Polyline();
 var _activeMarkers = [];
+var autocomplete;
+var startMarker;
 
 var KM_PER_MILE = 1.60934;
 
@@ -56,18 +58,22 @@ function getMyLocation(){
             myLocation = pos;
             gPos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
             hideOverlay();
-            $('#searchScreen').show();
-            $('.main').hide();
-            initSearch();
+            //$('#searchScreen').show();
+            //$('.main').hide();
+            //initSearch();
 
             //
             //hideOverlay();
         }, function() {
             // handleLocationError(true, infoWindow, map.getCenter());
-            hideOverlay();
-            $('#searchScreen').show();
+
+            pos = { //default location to TDOT
+                lat: 43.652073,
+                lng: -79.382293,
+            }
+            initMap(pos);
+
             initSearch();
-            alert("error");
         });
     } else {
         alert("doesnt support geolocation?");
@@ -82,7 +88,7 @@ function initMap(pos){
         center: pos,
         zoom: 16
     });
-    var startMarker = new google.maps.Marker({
+    startMarker = new google.maps.Marker({
         position: pos,
         map: map
     });
@@ -226,7 +232,7 @@ function findPublicRoutes(){
 
     $.ajax({
         url: "https://oauth2-api.mapmyapi.com/v7.1/route/?close_to_location=" +
-            pos.lat + "%2C" + pos.lng +"&maximum_distance="+(distance*1.05)+"&minimum_distance="+(distance*0.95),
+            myLocation.lat + "%2C" + myLocation.lng +"&maximum_distance="+(distance*1.05)+"&minimum_distance="+(distance*0.95),
         beforeSend: function(xhr){
             xhr.setRequestHeader('Api-Key', '5y9kjxu2jy5g4mf3h8pfaz3ky8uc7c49');
             xhr.setRequestHeader('Authorization', 'Bearer 6013db221b8235c9dc7b2f78f1ecf0d653204da5');
@@ -313,10 +319,18 @@ $(function(){
     //});
 
     updateDistances();
+    $('#changeLocation').click(function(){
+
+        initSearch();
+        return false;
+    })
 })
 
 
 function initSearch(){
+    hideOverlay();
+    $('#searchScreen').show();
+    $('.selectpicker').selectpicker('hide');
     initAutocomplete();
 
 }

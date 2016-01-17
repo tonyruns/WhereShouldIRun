@@ -77,7 +77,7 @@ div{
 .loader {
     display: block;
     width: 220px;
-    background: url(../images/loading.GIF) no-repeat;
+    background: url(../public/images/loading.GIF) no-repeat;
     margin: 2rem auto;
     height: 3.5rem;
     position: relative;

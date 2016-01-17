@@ -4,22 +4,37 @@ var bodyParser = require('body-parser');
 var app = express();
 
 app.use( bodyParser.json() );       // to support JSON-encoded bodies
-app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
-    extended: true
-}));
-app.use(express.json());       // to support JSON-encoded bodies
+//app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+//    extended: true
+//}));
 
 
 
 
-app.set('/test', function (req, res) {
-  console.log('post');
+app.post('/test', function (req, res) {
+    console.log('post');
+
 });
 
 app.get('/getRouteTimes', function(req, res) {
     console.log("get routes times:");
-    //console.log(req);
-    console.log(req.body.id);
+    console.log(req.headers.id);
+    debugger;
+    //console.log(JSON.stringify(req.headers));
+    //
+    //pg.connect(process.env.DATABASE_URL+'?sslm=true', function(err, client, done) {
+    //    client.query('SELECT * FROM RouteTimesTable', function (err, result) {
+    //        done();
+    //        if (err) {
+    //            console.error(err);
+    //            response.send("Error " + err);
+    //        }
+    //        else {
+    //            response.render('pages/db', {results: result.rows});
+    //        }
+    //    });
+    //});
+    // console.log(req.header());
 });
 
 app.set('port', (process.env.PORT || 5000));

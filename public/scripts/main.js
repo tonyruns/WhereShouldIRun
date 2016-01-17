@@ -349,10 +349,16 @@ function getRouteTimes(routeId){
     $.ajax({
         type: 'GET',
         url: '/getRouteTimes',
-        data: {id: routeId},
-        contenttype: 'application/json',
+       // data: {id: routeId},
+       // contenttype: 'application/json',
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader('id', routeId);
+
+            xhr.setRequestHeader('Content-Type', 'application/json');
+        },
         success: function(result){
             alert("yes");
+            console.log(result);
         }
     })
 }

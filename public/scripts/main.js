@@ -354,11 +354,11 @@ function getRouteTimes(routeId){
         beforeSend: function(xhr) {
             xhr.setRequestHeader('id', routeId);
 
-            xhr.setRequestHeader('Content-Type', 'application/json');
+           // xhr.setRequestHeader('Content-Type', 'application/json');
         },
         success: function(result){
             alert("yes");
-            console.log(result);
+           console.log(result);
         }
     })
 }

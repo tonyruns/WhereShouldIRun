@@ -323,6 +323,10 @@ $(function(){
         initSearch();
         return false;
     })
+
+    $('like').click(function(){
+        $.post('/test')
+    });
 })
 
 

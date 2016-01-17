@@ -1,0 +1,244 @@
+/**
+ * Created by Tony on 2015-12-07.
+ */
+/** copied from *http://stackoverflow.com/questions/2637023/how-to-calculate-the-latlng-of-a-point-a-certain-distance-away-from-another */
+
+Number.prototype.toRad = function() {
+    return this * Math.PI / 180;
+}
+
+Number.prototype.toDeg = function() {
+    return this * 180 / Math.PI;
+}
+
+
+
+//brng is the inital bearing from the start point in degrees
+//  e.g. 90 degrees from the start means EAST
+//distance is in km
+google.maps.LatLng.prototype.destinationPoint = function(brng, dist) {
+    dist = dist / 6371;
+    brng = brng.toRad();
+
+    var lat1 = this.lat().toRad(), lon1 = this.lng().toRad();
+
+    var lat2 = Math.asin(Math.sin(lat1) * Math.cos(dist) +
+        Math.cos(lat1) * Math.sin(dist) * Math.cos(brng));
+
+    var lon2 = lon1 + Math.atan2(Math.sin(brng) * Math.sin(dist) *
+            Math.cos(lat1),
+            Math.cos(dist) - Math.sin(lat1) *
+            Math.sin(lat2));
+
+    if (isNaN(lat2) || isNaN(lon2)) return null;
+
+    return new google.maps.LatLng(lat2.toDeg(), lon2.toDeg());
+}
+
+var directionsService = new google.maps.DirectionsService();
+
+google.maps.LatLng.prototype.snapPointToRoad = function(map){
+    var latlng = this;
+    directionsService.route(
+        {origin:this, destination:this, travelMode: google.maps.DirectionsTravelMode.DRIVING},
+        function(response, status) {
+            var homeMarker;
+            if (status == google.maps.DirectionsStatus.OK)
+            {
+                homeMarker = new google.maps.Marker({
+                    position: response.routes[0].legs[0].start_location,
+                    map: map,
+                });
+                //return new google.maps.LatLng(response.routes[0].legs[0].start_location.lat, response.routes[0].legs[0].start_location.lng);
+            } else {
+                homeMarker = new google.maps.Marker({
+                    position: latlng,
+                    map: map,
+                });
+                //var infowindow = new google.maps.InfoWindow({
+                //    content: latlng.lat() + ", "+ latlng.lng()
+                //});
+                //infowindow.open(map, homeMarker);
+
+                //return this;
+            }
+    });
+    //return roadPoint;
+}
+
+function mapPolyLine (xml) {
+    console.log(xml);
+    var points = [];
+    var bounds = new google.maps.LatLngBounds ();
+    $(xml).find("trkpt").each(function() {
+        var lat = $(this).attr("lat");
+        var lon = $(this).attr("lon");
+        var p = new google.maps.LatLng(lat, lon);
+        points.push(p);
+        bounds.extend(p);
+    });
+
+    //setMarker(points[0], FlagType.START);
+    while(_activeMarkers.length > 0){
+        var tempMarker = _activeMarkers.pop();
+        tempMarker.setMap(null);
+    }
+
+    if (getDistanceFromLatLonInKm(myLocation, points[0]) < getDistanceFromLatLonInKm(myLocation, points[points.length-1])){
+        _activeMarkers.push(getMarker(points[0], FlagType.END));
+        _activeMarkers.push(getMarker(points[points.length-1], FlagType.START));
+    }else{
+        _activeMarkers.push(getMarker(points[0], FlagType.START));
+        _activeMarkers.push(getMarker(points[points.length-1], FlagType.END));
+    }
+
+    //to do:
+    //set markers for start and end
+
+    bounds.extend(gPos);
+
+    var poly = new google.maps.Polyline({
+        // use your own style here
+        path: points,
+        strokeColor: "#FF00AA",
+        strokeOpacity: .7,
+        strokeWeight: 4
+    });
+    currentPoly.setMap(null);
+
+    currentPoly = poly;
+
+    poly.setMap(map);
+
+    // fit bounds to track
+    map.fitBounds(bounds);
+}
+
+function getMarker(pos, type){
+    var image;
+
+    if(type == FlagType.END){
+        image = {
+            url: 'images/finishFlag.png',
+            size: new google.maps.Size(20, 32),
+            origin: new google.maps.Point(0, 0),
+            anchor: new google.maps.Point(20, 32)
+        };
+    }else if (type == FlagType.START){
+        image = {
+            url: 'images/startFlag.png',
+            size: new google.maps.Size(32,32),
+            origin: new google.maps.Point(0,0),
+            //anchor: new google.maps.Point(16, 30),
+        }
+    }
+
+    var marker = new google.maps.Marker({
+        icon: image,
+        position: pos,
+        map: map
+    });
+
+    return marker;
+
+}
+
+function getDistanceFromLatLonInKm(crd1,crd2) {
+    var lat1 = crd1.lat;
+    var lat2 = crd2.lat;
+    var lon1 = crd1.lon == undefined ? crd1.lng : crd1.lon;
+    var lon2 = crd2.lon == undefined ? crd2.lng : crd2.lon;
+
+    var R = 6371; // Radius of the earth in km
+    var dLat = deg2rad(lat2 - lat1);  // deg2rad below
+    var dLon = deg2rad(lon2 - lon1);
+    var a =
+            Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+            Math.sin(dLon/2) * Math.sin(dLon/2)
+        ;
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    var d = R * c; // Distance in km
+    return d;
+}
+
+function deg2rad(deg) {
+    return deg * (Math.PI/180)
+}
+
+function initAutocomplete() {
+
+    var input = /** @type {!HTMLInputElement} */(
+        document.getElementById('pac-input'));
+
+    autocomplete = new google.maps.places.Autocomplete(input);
+    autocomplete.bindTo('bounds', map);
+
+    var infowindow = new google.maps.InfoWindow();
+    //var marker = new google.maps.Marker({
+    //    map: map,
+    //    //anchorPoint: new google.maps.Point(0, -29)
+    //});
+
+   // autocomplete.addListener('place_changed', function() {
+    $('#searchButton').on('click', function(){
+        infowindow.close();
+       // marker.setVisible(false);
+        var place = autocomplete.getPlace();
+        if (!place || !place.geometry) {
+            $('#noResults').show();
+            return;
+        }
+        $('#noResults').hide();
+
+        $('.main').show();
+        $('.selectpicker').selectpicker('show');
+        $('#searchScreen').hide();
+        // If the place has a geometry, then present it on a map.
+        if (place.geometry.viewport) {
+            map.fitBounds(place.geometry.viewport);
+
+        } else {
+            map.setCenter(place.geometry.location);
+            map.setZoom(16);  // Why 17? Because it looks good.
+        }
+
+
+        startMarker.setMap(null);
+        startMarker = new google.maps.Marker({
+            map: map,
+            position: place.geometry.location
+        });
+
+        gPos = place.geometry.location;
+        myLocation = {
+            lat: place.geometry.location.lat(),
+            lng: place.geometry.location.lng()
+        }
+
+
+        //marker.setIcon(/** @type {google.maps.Icon} */({
+        //    url: place.icon,
+        //    size: new google.maps.Size(71, 71),
+        //    origin: new google.maps.Point(0, 0),
+        //    anchor: new google.maps.Point(17, 34),
+        //    scaledSize: new google.maps.Size(35, 35)
+        //}));
+        //marker.setPosition(place.geometry.location);
+        //marker.setVisible(true);
+
+        var address = '';
+        if (place.address_components) {
+            address = [
+                (place.address_components[0] && place.address_components[0].short_name || ''),
+                (place.address_components[1] && place.address_components[1].short_name || ''),
+                (place.address_components[2] && place.address_components[2].short_name || '')
+            ].join(' ');
+        }
+
+        //infowindow.setContent('<div id="hook"><strong>' + place.name + '</strong><br>' + address);
+
+        //infowindow.open(map, marker);
+        //infowindow.zIndex(10000);
+    });
+}

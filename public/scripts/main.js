@@ -324,7 +324,7 @@ $(function(){
         return false;
     })
 
-    $('like').click(function(){
+    $('#test').click(function(){
         $.post('/test')
     });
 })

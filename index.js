@@ -3,9 +3,12 @@ var app = express();
 
 
 app.post('/test', function (req, res) {
-  debugger;
+  console.log('post');
+});
 
-  console.log('works');
+app.get('/getRouteTimes', function(req, res){
+    console.log("get routes times:");
+    console.log(req);
 });
 
 

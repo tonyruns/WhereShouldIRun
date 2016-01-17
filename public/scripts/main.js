@@ -248,6 +248,7 @@ function findPublicRoutes(){
             var distance = response._embedded.routes[selectedRoute].distance/1000;
 
             console.log(selectedRoute);
+            getRouteTimes(response._embedded.routes[selectedRoute]._links.self[0].id);
             $.ajax({
                 type: "GET",
                 url: "https://oauth2-api.mapmyapi.com"+gpxHref,
@@ -325,7 +326,12 @@ $(function(){
     })
 
     $('#test').click(function(){
-        $.post('/test')
+        //$.post('/test')
+        $.ajax({
+            type: 'POST',
+            url: '/test',
+            data: {dog: 'doggy'},
+        })
     });
 })
 
@@ -336,4 +342,16 @@ function initSearch(){
     $('.selectpicker').selectpicker('hide');
     initAutocomplete();
 
+}
+
+function getRouteTimes(routeId){
+    console.log(routeId);
+    $.ajax({
+        type: 'GET',
+        url: '/getRouteTimes',
+        data: JSON.stringify({id: routeId}),
+        success: function(){
+            alert("yes");
+        }
+    })
 }

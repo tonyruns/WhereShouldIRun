@@ -349,8 +349,9 @@ function getRouteTimes(routeId){
     $.ajax({
         type: 'GET',
         url: '/getRouteTimes',
-        data: JSON.stringify({id: routeId}),
-        success: function(){
+        data: {id: routeId},
+        contenttype: 'application/json',
+        success: function(result){
             alert("yes");
         }
     })

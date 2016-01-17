@@ -1,57 +1,97 @@
 <!DOCTYPE html>
+
 <html>
-<head>
-  <% include ../partials/header.ejs %>
-</head>
+    <head>
 
-<body>
+        <% include ../partials/header.ejs %>
 
-  <% include ../partials/nav.ejs %>
+    </head>
+    <body>
+    <div class="main" style="min-height: 100%">
+        <div class="container">
+            <div class="row pull-right footer-item">
+                <a href="#" id="changeLocation">Change location</a>
+            </div>
+            <div class="header page-header">
+                Where the fudge should I run?
+            </div>
+            <div>
+                <div class="row">
+                    <div id="map" class="map-canvas"></div>
+                </div>
+                <br/>
 
-  <h2>OYOYOYOY</h2>
-<div class="jumbotron text-center">
-  <div class="container">
-    <a href="/" class="lang-logo">
-      <img src="/lang-logo.png">
-    </a>
-    <h1>Getting Started with Node on Heroku</h1>
-    <p>This is a sample Node application deployed to Heroku. It's a reasonably simple app - but a good foundation for understanding how to get the most out of the Heroku platform.</p>
-    <a type="button" class="btn btn-lg btn-default" href="https://devcenter.heroku.com/articles/getting-started-with-nodejs"><span class="glyphicon glyphicon-flash"></span> Getting Started with Node</a>
-    <a type="button" class="btn btn-lg btn-primary" href="https://github.com/heroku/node-js-getting-started"><span class="glyphicon glyphicon-download"></span> Source on GitHub</a>
-  </div>
-</div>
-<div class="container">
-  <div class="alert alert-info text-center" role="alert">
-    To deploy your own copy, and learn the fundamentals of the Heroku platform, head over to the <a href="https://devcenter.heroku.com/articles/getting-started-with-nodejs" class="alert-link">Getting Started with Node on Heroku</a> tutorial.
-  </div>
-  <hr>
-  <div class="row">
-    <div class="col-md-6">
-      <h3><span class="glyphicon glyphicon-info-sign"></span> How this sample app works</h3>
-      <ul>
-        <li>This app was deployed to Heroku, either using Git or by using <a href="https://github.com/heroku/node-js-getting-started">Heroku Button</a> on the repository.</li>
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-3">
+                        <b>Distance</b>
+                        <!--<div class="row">-->
+                        <select id="distance" class="selectpicker col-sm-5 noRightPad">
+                        </select>
+                        <!--</div>-->
 
-        <li>When Heroku received the source code, it grabbed all the dependencies in the <a href="https://github.com/heroku/node-js-getting-started/blob/master/package.json">package.json</a>.</li>
-        <li>The platform then spins up a dyno, a lightweight container that provides an isolated environment in which the slug can be mounted and executed.</li>
-        <li>You can scale your app, manage it, and deploy over <a href="https://addons.heroku.com/">150 add-on services</a>, from the Dashboard or CLI.</li>
-        <li>Check out the <a href="https://devcenter.heroku.com/articles/getting-started-with-nodejs">Getting Started</a> guide to learn more!</li>
-      </ul>
+
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <button type="button" id="submit" class="btn btn-default">Submit</button>
+                    </div>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-3">
+                        Actual Distance
+                        <div id="result"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div style="padding-bottom: 60px">
+        </div>
+
+
     </div>
-    <div class="col-md-6">
-      <h3><span class="glyphicon glyphicon-link"></span> Helpful Links</h3>
-      <ul>
-        <li><a href="https://www.heroku.com/home">Heroku</a></li>
-        <li><a href="https://devcenter.heroku.com/">Heroku Dev Center</a></li>
-        <li><a href="https://devcenter.heroku.com/articles/getting-started-with-nodejs">Getting Started with Node on Heroku</a></li>
-        <li><a href="https://devcenter.heroku.com/articles/deploying-nodejs">Deploying Node Apps on Heroku</a></li>
-      </ul>
+
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-1 pull-left footer-item">
+                    Inspired by <a href="http://wtfsigte.com/">wtfsigte.com</a>
+                </div>
+                <div class="col-sm-1 pull-left	footer-item noLeftPad">
+                    <img src="images/wtfsigte.png" style="width:30px; height: 30;"/>
+                </div>
+                <div class="col-sm-1 pull-right footer-item">
+                    By <a href="http://tonyruns.com">TonyRuns</a>
+
+                </div>
+                <div class="col-sm-push-1 pull-right" style="padding:10px">
+                    <input type="checkbox" id="unit" checked>
+                </div>
+
+
+            </div>
+        </div>
     </div>
-  </div> <!-- row -->
-   <div class="alert alert-info text-center" role="alert">
-    Please do work through the Getting Started guide, even if you do know how to build such an application.  The guide covers the basics of working with Heroku, and will familiarize you with all the concepts you need in order to build and deploy your own apps.
-  </div>
-</div>
+
+    <div class="overlay" id="overlayMain">
+        Hold up
+        <div class="loader"></div>
+    </div>
+
+    <div class="search" id="searchScreen">
+        <div class="row">
+            <input id="pac-input" class="controls" type="text" placeholder="Enter your location">
+            <button type="button" id="searchButton" class="btn btn-default">Search</button>
+        </div>
+        <div class="row" id="noResults" hidden>
+            Location not found
+        </div>
+
+    </div>
+
+    <audio src="music/HoldUp.mp3" id="loadMusic">
+    </audio>
+
+    </body>
 
 
-</body>
 </html>

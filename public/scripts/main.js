@@ -247,7 +247,7 @@ function findPublicRoutes(){
             var gpxHref = response._embedded.routes[selectedRoute]._links.alternate[1].href;
             var distance = response._embedded.routes[selectedRoute].distance/1000;
 
-
+            console.log(selectedRoute);
             $.ajax({
                 type: "GET",
                 url: "https://oauth2-api.mapmyapi.com"+gpxHref,

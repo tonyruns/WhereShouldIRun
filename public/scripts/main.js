@@ -10,6 +10,7 @@ var currentPoly = new google.maps.Polyline();
 var _activeMarkers = [];
 var autocomplete;
 var startMarker;
+var latestRouteId;
 
 var KM_PER_MILE = 1.60934;
 
@@ -247,8 +248,8 @@ function findPublicRoutes(){
             var gpxHref = response._embedded.routes[selectedRoute]._links.alternate[1].href;
             var distance = response._embedded.routes[selectedRoute].distance/1000;
 
-            console.log(selectedRoute);
-            getRouteTimes(response._embedded.routes[selectedRoute]._links.self[0].id);
+            latestRouteId = response._embedded.routes[selectedRoute]._links.self[0].id;
+            getRouteTimes(latestRouteId);
             $.ajax({
                 type: "GET",
                 url: "https://oauth2-api.mapmyapi.com"+gpxHref,
@@ -314,9 +315,20 @@ $(function(){
         updateDistances();
     });
 
-    //$.ajax({
-    //
-    //});
+    $('#timepicker1').timepicker(
+        {
+            disableFocus: true,
+            showInputs: false,
+            showSeconds: true,
+            showMeridian: false,
+            secondStep: 1,
+            defaultValue: '00:00:00'
+        }
+    );
+
+    $('#timepicker1').timepicker('setTime', '0:0:0');
+
+
 
     updateDistances();
     $('#changeLocation').click(function(){
@@ -326,12 +338,9 @@ $(function(){
     })
 
     $('#test').click(function(){
-        //$.post('/test')
-        $.ajax({
-            type: 'POST',
-            url: '/test',
-            data: {dog: 'doggy'},
-        })
+
+        postRouteTimes();
+
     });
 })
 
@@ -359,6 +368,25 @@ function getRouteTimes(routeId){
         success: function(result){
             alert("yes");
            console.log(result);
+        }
+    })
+}
+
+function postRouteTimes(){
+    //$.post('/test')
+    $.ajax({
+        type: 'POST',
+        url: '/postRouteTimes',
+        // data: {id: routeId},
+        // contenttype: 'application/json',
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader('id', latestRouteId);
+
+            // xhr.setRequestHeader('Content-Type', 'application/json');
+        },
+        success: function(result){
+            alert("posted");
+            console.log(result);
         }
     })
 }

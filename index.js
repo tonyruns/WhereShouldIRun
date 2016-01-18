@@ -13,10 +13,7 @@ app.use( bodyParser.json() );       // to support JSON-encoded bodies
 
 
 
-app.post('/test', function (req, res) {
-    console.log('post');
 
-});
 
 
 
@@ -49,6 +46,12 @@ app.get('/db', function (request, response) {
   });
 })
 
+app.post('/postRouteTimes', function (req, res) {
+
+    console.log(JSON.stringify(req.headers));
+
+});
+
 app.get('/getRouteTimes', function(req, response) {
     console.log("get routes times:");
     console.log(req.headers.id);
@@ -61,7 +64,7 @@ app.get('/getRouteTimes', function(req, response) {
             { console.error(err); response.send("Error " + err); }
             else
             {
-                console.log(JSON.stringify(result));
+               // console.log(JSON.stringify(result));
                 response.send(JSON.stringify(result.rows));
             }
         });

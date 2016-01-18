@@ -23,20 +23,22 @@ div{
 .main{
     min-height:100%;
     position:relative;
-    margin: 0 auto -50px;
+    /*margin: 0 auto -50px;*/
 }
 .footer{
+    margin-top:-50px;
+    position: relative;
     height: 50px;
     background-color: #f5f5f5;
     bottom: 0;
 }
 
 .noRightPad{
-    padding-right: 0px;
+    padding-right: 0px !important;
 }
 
 .noLeftPad{
-    padding-left: 0px;
+    padding-left: 0px !important;
 }
 
 .overlay {
@@ -93,8 +95,14 @@ div{
     padding: 10px;
 }
 
+.list{
+    font-weight: lighter;
+    color: #5b5b5b;
+}
 
-
+.list-item{
+    padding: 5px;
+}
 
 .controls {
     /*margin-top: 10px;*/
@@ -122,7 +130,7 @@ div{
     /*}*/
 }
 
-::-webkit-input-placeholder {
+.controls::-webkit-input-placeholder{
     padding-top: 1rem;
 }
 

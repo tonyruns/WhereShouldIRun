@@ -224,9 +224,10 @@ function findPublicRoutes(){
 
     //convert distances to metres
     var distance=$( "#distance" ).val()*1000 * (!$('#unit').prop("checked") ? KM_PER_MILE : 1);
-    //alert(distance);
 
     showOverlay();
+
+    $('#routeActionContainer').show();
 
 
 
@@ -366,8 +367,41 @@ function getRouteTimes(routeId){
            // xhr.setRequestHeader('Content-Type', 'application/json');
         },
         success: function(result){
-            alert("yes");
-           console.log(result);
+            var times = JSON.parse(result);
+            $('#list1').empty();
+            $('#list2').empty();
+            var i=0;
+            for (i=0; i<times.length; i++){
+                if (i<5){
+                    $('#list1').append($('<div>',{
+                        class: 'list-item',
+                        text: (i+1) + ".  " +times[i].name + " - " + times[i].time
+                    }));
+                }else{
+                    $('#list2').append($('<div>',{
+                        class: 'list-item',
+
+                        text: (i+1) + ".  " +times[i].name + " - " + times[i].time
+                    }));
+                }
+            }
+            for (i; i < 10; i++) {
+                if (i<5){
+                    $('#list1').append($('<div>',{
+                        class: 'list-item',
+                        text: (i+1) + ".  --- -----"
+                    }));
+                }else{
+                    $('#list2').append($('<div>',{
+                        class: 'list-item',
+                        text: (i+1) + ".  --- -----"
+                    }));
+                }
+
+
+                //$('')
+            }
+            console.log(result);
         }
     })
 }
@@ -382,13 +416,14 @@ function postRouteTimes(){
         beforeSend: function(xhr) {
             xhr.setRequestHeader('id', latestRouteId);
             xhr.setRequestHeader('time', $('#timepicker1').val());
-            
+            xhr.setRequestHeader('name', $('#runnerName').val());
+
 
             // xhr.setRequestHeader('Content-Type', 'application/json');
         },
         success: function(result){
-            alert("posted");
-            console.log(result);
+            getRouteTimes(latestRouteId);
+
         }
     })
 }

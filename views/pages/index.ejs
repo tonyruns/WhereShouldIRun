@@ -43,29 +43,56 @@
 
                 </div>
             </div>
-        </div>
-        <div style="padding-bottom: 60px">
-        </div>
-        <div clas="row">
-            <div class="col-sm-1">
-                <button type="button" id="test" class="btn btn-default">Submit</button>
-            </div>
-            <!--<div class="col-sm-"-->
-            <div class="col-sm-2">
-                <div class="input-group bootstrap-timepicker timepicker">
-                    <input id="timepicker1" type="text" class="form-control input-small">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+            <br/>
+            <div class="row" id="routeActionContainer" hidden>
+                <div class="col-sm-6">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            top times
+                        </div>
+                    </div>
+                    <div class="row list" style="padding:5px">
+                        <div class="col-sm-5" id="list1">
+
+                        </div>
+                        <div class="col-sm-5" id="list2">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="row">
+                        <div class="col-sm-6 pull-right" style="padding:5px">
+                            <input id="runnerName" type="text" maxlength="25" placeholder="Your name" class="form-control">
+                        </div>
+                    </div>
+                    <div clas="row">
+                        <div class="col-sm-2 pull-right">
+                            <button type="button" id="test" class="btn btn-default">Submit</button>
+                        </div>
+                        <div class="col-sm-4 pull-right">
+                            <div class="input-group bootstrap-timepicker timepicker">
+                                <input id="timepicker1" type="text" class="form-control input-small" style="z-index: 0 !important">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
 
+
+
+        <!--<div style="padding-bottom: 60px">-->
+        <!--</div>-->
 
     </div>
 
     <div class="footer">
         <div class="container">
             <div class="row">
-                <div class="col-sm-1 pull-left footer-item">
+                <div class="col-sm-2 pull-left footer-item noRightPad">
                     Inspired by <a href="http://wtfsigte.com/">wtfsigte.com</a>
                 </div>
                 <div class="col-sm-1 pull-left	footer-item noLeftPad">

@@ -49,6 +49,24 @@ app.get('/db', function (request, response) {
 app.post('/postRouteTimes', function (req, res) {
 
     console.log(JSON.stringify(req.headers));
+    if (req.headers.id != undefined && req.headers.time != '0:00:00'){
+        pg.connect(process.env.DATABASE_URL+'?ssl=true', function(err, client, done) {
+            client.query(
+                'INSERT into RouteTimesTable (id, name, time) VALUES($1, $2, $3) RETURNING id',
+                [req.headers.id, 'Tony Jin - test', req.headers.time],
+                function(err, result) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log('row inserted with id: ' + result.rows[0].id);
+                    }
+
+                        console.log('Client will end now!!!');
+                        client.end();
+
+                });
+        });
+    }
 
 });
 

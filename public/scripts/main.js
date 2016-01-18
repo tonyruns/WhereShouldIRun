@@ -381,6 +381,8 @@ function postRouteTimes(){
         // contenttype: 'application/json',
         beforeSend: function(xhr) {
             xhr.setRequestHeader('id', latestRouteId);
+            xhr.setRequestHeader('time', $('#timepicker1').val());
+            
 
             // xhr.setRequestHeader('Content-Type', 'application/json');
         },

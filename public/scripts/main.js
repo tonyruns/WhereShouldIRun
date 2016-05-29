@@ -256,7 +256,7 @@ function findPublicRoutes(){
                 url: "https://oauth2-api.mapmyapi.com"+gpxHref,
                 beforeSend: function(xhr){
                         xhr.setRequestHeader('Api-Key', '5y9kjxu2jy5g4mf3h8pfaz3ky8uc7c49');
-                        xhr.setRequestHeader('Authorization', 'Bearer 3c46deb6497c3b021ec2f7a07756618900d07a11');
+                        xhr.setRequestHeader('Authorization', 'Bearer 6f7d1f17d9949b14e797ffdd7395dc65601ebf68');
                         xhr.setRequestHeader('X-Originating-Ip', '174.92.76.85');
                         xhr.setRequestHeader('Content-Type', 'application/json');
                 },

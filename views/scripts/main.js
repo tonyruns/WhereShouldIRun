@@ -234,7 +234,7 @@ function findPublicRoutes(){
             myLocation.lat + "%2C" + myLocation.lng +"&maximum_distance="+(distance*1.05)+"&minimum_distance="+(distance*0.95),
         beforeSend: function(xhr){
             xhr.setRequestHeader('Api-Key', '5y9kjxu2jy5g4mf3h8pfaz3ky8uc7c49');
-            xhr.setRequestHeader('Authorization', 'Bearer 6013db221b8235c9dc7b2f78f1ecf0d653204da5');
+            xhr.setRequestHeader('Authorization', 'Bearer 5241faa987ef909678213b8b6e3ff1aab898557d');
             xhr.setRequestHeader('X-Originating-Ip', '174.92.76.85');
             xhr.setRequestHeader('Content-Type', 'application/json');
             $('#loadMusic').trigger('play');
@@ -253,7 +253,7 @@ function findPublicRoutes(){
                 url: "https://oauth2-api.mapmyapi.com"+gpxHref,
                 beforeSend: function(xhr){
                         xhr.setRequestHeader('Api-Key', '5y9kjxu2jy5g4mf3h8pfaz3ky8uc7c49');
-                        xhr.setRequestHeader('Authorization', 'Bearer 6013db221b8235c9dc7b2f78f1ecf0d653204da5');
+                        xhr.setRequestHeader('Authorization', 'Bearer 5241faa987ef909678213b8b6e3ff1aab898557d');
                         xhr.setRequestHeader('X-Originating-Ip', '174.92.76.85');
                         xhr.setRequestHeader('Content-Type', 'application/json');
                 },
